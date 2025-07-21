@@ -102,15 +102,18 @@ const StepperNavigation = ({
 		);
 	};
 
-	const AddButton = () => (
-		<Button className="w-4 h-4 bg-white rounded-lg border-[0.5px] border-gray-200 shadow-sm flex items-center justify-center">
+	const AddButton = ({ afterStepId }: { afterStepId: string }) => (
+		<Button 
+			onPress={() => onAddPage(afterStepId)}
+			className="w-4 h-4 bg-white rounded-lg border-[0.5px] border-gray-200 shadow-sm flex items-center justify-center hover:bg-gray-50 transition-colors"
+		>
 			<img src={icons.plus} alt="Add" className="w-2 h-2" />
 		</Button>
 	);
 
 	const AddPageButton = () => (
 		<Button
-			onPress={onAddPage}
+			onPress={() => onAddPage()}
 			className="flex items-center gap-1.5 px-2.5 py-1 h-8 bg-white rounded-lg border-[0.5px] border-gray-200 shadow-sm hover:bg-gray-50 transition-colors"
 		>
 			<AddPageIcon />
@@ -136,12 +139,18 @@ const StepperNavigation = ({
 						{steps.map((step, index) => (
 							<React.Fragment key={step.id}>
 								<StepButton step={step} isActive={step.status === "active"} />
-								{index < steps.length - 1 && <Connector />}
+								{step.status === "active" && (
+									<>
+										<Connector />
+										<AddButton afterStepId={step.id} />
+									</>
+								)}
+								{index < steps.length - 1 && step.status !== "active" && (
+									<Connector />
+								)}
 							</React.Fragment>
 						))}
 
-						<Connector />
-						<AddButton />
 						<Connector />
 						<AddPageButton />
 					</div>

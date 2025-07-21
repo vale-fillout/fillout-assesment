@@ -8,5 +8,5 @@ export interface Step {
 export interface StepperNavigationProps {
 	steps: Step[];
 	onStepChange: (stepId: string) => void;
-	onAddPage: () => void;
+	onAddPage: (afterStepId?: string) => void;
 }

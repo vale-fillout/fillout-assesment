@@ -42,14 +42,25 @@ export default function Home() {
 		setActiveStepId(stepId);
 	};
 
-	const handleAddPage = () => {
+	const handleAddPage = (afterStepId?: string) => {
 		const newPageId = `page-${Date.now()}`;
 		const newPage = {
 			id: newPageId,
 			label: "Untitled",
 			icon: icons.document,
 		};
-		setBaseSteps((prev) => [...prev, newPage]);
+		
+		if (afterStepId) {
+			setBaseSteps((prev) => {
+				const index = prev.findIndex(step => step.id === afterStepId);
+				const newSteps = [...prev];
+				newSteps.splice(index + 1, 0, newPage);
+				return newSteps;
+			});
+		} else {
+			setBaseSteps((prev) => [...prev, newPage]);
+		}
+		
 		setActiveStepId(newPageId);
 	};
 
