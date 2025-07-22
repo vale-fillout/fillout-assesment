@@ -20,13 +20,7 @@ import {
 	horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { SortablePageButton } from "./SortablePageButton";
-
-// Icon assets from Figma
-const icons = {
-	plus: "http://localhost:3845/assets/cfe8bf6eb0599195717ea9e8a80ed9c8bab42fb9.svg",
-	addPage:
-		"http://localhost:3845/assets/44efc52d3be18efd085adae93d5937d0f09f3ac8.svg",
-};
+import { PlusIcon } from "../Icons";
 
 export function PageNavigation({
 	pages,
@@ -75,23 +69,9 @@ export function PageNavigation({
 		}
 	};
 
-	// why?
 	React.useEffect(() => {
 		setLocalPages(pages);
 	}, [pages]);
-
-	const AddButton = ({ afterPageId }: { afterPageId: string }) => (
-		<Button
-			onPress={() => onAddPage(afterPageId)}
-			className="w-4 h-4 bg-white rounded-lg border-[0.5px] border-gray-200 shadow-sm cursor-pointer flex items-center justify-center hover:bg-gray-50 hover:scale-110 transition-all duration-500 ease-out animate-in fade-in-0 zoom-in-75 slide-in-from-bottom-4"
-		>
-			<img
-				src={icons.plus}
-				alt="Add"
-				className="w-2 h-2 transition-transform duration-500"
-			/>
-		</Button>
-	);
 
 	const Connector = ({ isAnimated = false }: { isAnimated?: boolean }) => (
 		<div
@@ -140,7 +120,7 @@ export function PageNavigation({
 												{showAddButton && (
 													<div className="flex items-center animate-in fade-in-0 slide-in-from-bottom-4 duration-500 ease-out">
 														<Connector isAnimated />
-														<AddButton afterPageId={page.id} />
+														<AddButton onPress={() => onAddPage(page.id)} />
 														<Connector isAnimated />
 													</div>
 												)}
@@ -154,7 +134,15 @@ export function PageNavigation({
 							</SortableContext>
 						</DndContext>
 						<Connector />
-						<AddPageButton onAddPage={addToLastPage} />
+						<Button
+							onPress={addToLastPage}
+							className="flex items-center gap-1.5 px-2.5 py-1 h-8 bg-white rounded-lg border-[0.5px] border-gray-200 shadow-sm hover:bg-gray-50 transition-colors cursor-pointer"
+						>
+							<AddPageIcon />
+							<span className="text-sm font-medium text-gray-900 tracking-tight leading-5">
+								Add page
+							</span>
+						</Button>
 					</div>
 				</div>
 			</div>
@@ -162,17 +150,16 @@ export function PageNavigation({
 	);
 }
 
-export function AddPageButton(props: { onAddPage: () => void }) {
-	const { onAddPage } = props;
+/**
+ * Button icon for adding a new page.
+ */
+function AddButton({ onPress }: { onPress: () => void }) {
 	return (
 		<Button
-			onPress={onAddPage}
-			className="flex items-center gap-1.5 px-2.5 py-1 h-8 bg-white rounded-lg border-[0.5px] border-gray-200 shadow-sm hover:bg-gray-50 transition-colors"
+			onPress={onPress}
+			className="w-4 h-4 bg-white rounded-lg border-[0.5px] border-gray-200 shadow-sm cursor-pointer flex items-center justify-center hover:bg-gray-50 hover:scale-110 transition-all duration-500 ease-out animate-in fade-in-0 zoom-in-75 slide-in-from-bottom-4"
 		>
-			<AddPageIcon />
-			<span className="text-sm font-medium text-gray-900 tracking-tight leading-5">
-				Add page
-			</span>
+			<PlusIcon />
 		</Button>
 	);
 }

@@ -5,3 +5,7 @@ export { TrashIcon } from "./Trash";
 export { FlagIcon } from "./Flag";
 export { AddPageIcon } from "./AddPage";
 export { SettingsMenuIcon } from "./SettingsMenu";
+export { InfoIcon } from "./Info";
+export { DocumentIcon } from "./Document";
+export { PlusIcon } from "./Plus";
+export { CheckIcon } from "./Check";

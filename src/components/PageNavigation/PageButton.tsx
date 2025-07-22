@@ -111,11 +111,14 @@ export function PageButton({
 			onPointerDown={handlePointerDown}
 			{...(dragListeners?.onKeyDown
 				? {
-						onKeyDown: dragListeners.onKeyDown as React.KeyboardEventHandler<HTMLDivElement>,
+						onKeyDown:
+							dragListeners.onKeyDown as React.KeyboardEventHandler<HTMLDivElement>,
 					}
 				: {})}
 		>
-			<img src={page.icon} alt="" className="w-5 h-5" />
+			<div className="w-5 h-5 flex items-center justify-center">
+				{page.icon}
+			</div>
 			<span className="text-sm font-medium tracking-tight leading-5">
 				{page.label}
 			</span>
