@@ -105,10 +105,10 @@ export function PageNavigation({
 
 	return (
 		<div className="p-5 min-h-screen">
-			<div className="rounded-xl border-[0.5px] border-gray-200 shadow-sm p-5">
+			<div className="rounded-xl border-[0.5px] border-gray-200 shadow-sm p-5 max-w-[80vw] mx-auto">
 				<div className="flex items-center justify-between">
 					<div className="w-[109px] h-[15px]" />
-					<div className="flex items-center">
+					<div className="flex items-center flex-wrap gap-2 justify-center">
 						<DndContext
 							sensors={sensors}
 							collisionDetection={closestCenter}
