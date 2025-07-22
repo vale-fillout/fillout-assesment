@@ -35,6 +35,21 @@ export function PageNavigation({
 	onPagesReorder,
 }: PageNavigationProps) {
 	const [localPages, setLocalPages] = useState(pages);
+	const [hoveredPageId, setHoveredPageId] = useState<string | null>(null);
+	const hoverTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+	const handleMouseEnter = (pageId: string) => {
+		if (hoverTimeoutRef.current) {
+			clearTimeout(hoverTimeoutRef.current);
+		}
+		setHoveredPageId(pageId);
+	};
+
+	const handleMouseLeave = () => {
+		hoverTimeoutRef.current = setTimeout(() => {
+			setHoveredPageId(null);
+		}, 100);
+	};
 
 	const sensors = useSensors(
 		useSensor(PointerSensor, {
@@ -68,14 +83,20 @@ export function PageNavigation({
 	const AddButton = ({ afterPageId }: { afterPageId: string }) => (
 		<Button
 			onPress={() => onAddPage(afterPageId)}
-			className="w-4 h-4 bg-white rounded-lg border-[0.5px] border-gray-200 shadow-sm flex items-center justify-center hover:bg-gray-50 transition-colors"
+			className="w-4 h-4 bg-white rounded-lg border-[0.5px] border-gray-200 shadow-sm cursor-pointer flex items-center justify-center hover:bg-gray-50 hover:scale-110 transition-all duration-500 ease-out animate-in fade-in-0 zoom-in-75 slide-in-from-bottom-4"
 		>
-			<img src={icons.plus} alt="Add" className="w-2 h-2" />
+			<img
+				src={icons.plus}
+				alt="Add"
+				className="w-2 h-2 transition-transform duration-500"
+			/>
 		</Button>
 	);
 
-	const Connector = () => (
-		<div className="w-5 h-[1.5px] border-t border-dashed border-gray-300" />
+	const Connector = ({ isAnimated = false }: { isAnimated?: boolean }) => (
+		<div
+			className={`w-5 h-[1.5px] border-t border-dashed border-gray-300 transition-all duration-1500 ${isAnimated ? "animate-in fade-in-0 slide-in-from-left-4" : ""}`}
+		/>
 	);
 
 	const addToLastPage = React.useCallback(() => {
@@ -97,23 +118,39 @@ export function PageNavigation({
 								items={localPages.map((page) => page.id)}
 								strategy={horizontalListSortingStrategy}
 							>
-								{localPages.map((page, index) => (
-									<React.Fragment key={page.id}>
-										<SortablePageButton
-											page={page}
-											isActive={page.status === "active"}
-											onPageChange={onPageChange}
-										/>
-										{page.status === "active" && (
-											<>
-												<Connector />
-												<AddButton afterPageId={page.id} />
-											</>
-										)}
-										{index < localPages.length - 1 &&
-											page.status !== "active" && <Connector />}
-									</React.Fragment>
-								))}
+								{localPages.map((page, index) => {
+									const activePageId = localPages.find(
+										(p) => p.status === "active",
+									)?.id;
+									const targetPageId = hoveredPageId || activePageId;
+									const showAddButton = page.id === targetPageId;
+
+									return (
+										<React.Fragment key={page.id}>
+											<div
+												onMouseEnter={() => handleMouseEnter(page.id)}
+												onMouseLeave={handleMouseLeave}
+												className="flex items-center"
+											>
+												<SortablePageButton
+													page={page}
+													isActive={page.status === "active"}
+													onPageChange={onPageChange}
+												/>
+												{showAddButton && (
+													<div className="flex items-center animate-in fade-in-0 slide-in-from-bottom-4 duration-500 ease-out">
+														<Connector isAnimated />
+														<AddButton afterPageId={page.id} />
+														<Connector isAnimated />
+													</div>
+												)}
+												{index < localPages.length - 1 && !showAddButton && (
+													<Connector />
+												)}
+											</div>
+										</React.Fragment>
+									);
+								})}
 							</SortableContext>
 						</DndContext>
 						<Connector />
