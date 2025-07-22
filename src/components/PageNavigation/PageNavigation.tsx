@@ -22,6 +22,10 @@ import {
 import { SortablePageButton } from "./SortablePageButton";
 import { PlusIcon } from "../Icons";
 
+/**
+ * PageNavigation component displays a horizontal navigation bar with sortable pages.
+ * It allows users to reorder pages, add new pages, and switch between active pages.
+ */
 export function PageNavigation({
 	pages,
 	onPageChange,
@@ -73,12 +77,6 @@ export function PageNavigation({
 		setLocalPages(pages);
 	}, [pages]);
 
-	const Connector = ({ isAnimated = false }: { isAnimated?: boolean }) => (
-		<div
-			className={`w-5 h-[1.5px] border-t border-dashed border-gray-300 transition-all duration-1500 ${isAnimated ? "animate-in fade-in-0 slide-in-from-left-4" : ""}`}
-		/>
-	);
-
 	const addToLastPage = React.useCallback(() => {
 		onAddPage(localPages[localPages.length - 1]?.id);
 	}, [localPages, onAddPage]);
@@ -88,7 +86,7 @@ export function PageNavigation({
 			<div className="rounded-xl border-[0.5px] border-gray-200 shadow-sm p-5 max-w-[80vw] mx-auto">
 				<div className="flex items-center justify-between">
 					<div className="w-[109px] h-[15px]" />
-					<div className="flex items-center flex-wrap gap-2 justify-center">
+					<div className="flex items-center flex-wrap justify-center">
 						<DndContext
 							sensors={sensors}
 							collisionDetection={closestCenter}
@@ -118,7 +116,7 @@ export function PageNavigation({
 													onPageChange={onPageChange}
 												/>
 												{showAddButton && (
-													<div className="flex items-center animate-in fade-in-0 slide-in-from-bottom-4 duration-500 ease-out">
+													<div className="flex items-center animate-in fade-in-0 slide-in-from-bottom-4 duration-500 ease-out -ml-0">
 														<Connector isAnimated />
 														<AddButton onPress={() => onAddPage(page.id)} />
 														<Connector isAnimated />
@@ -133,7 +131,16 @@ export function PageNavigation({
 								})}
 							</SortableContext>
 						</DndContext>
-						<Connector />
+						{(() => {
+							// determine if the last connector should be shown, sighh :/
+							const lastPage = localPages[localPages.length - 1];
+							const activePageId = localPages.find(
+								(p) => p.status === "active",
+							)?.id;
+							const targetPageId = hoveredPageId || activePageId;
+							const showAddButtonOnLastPage = lastPage?.id === targetPageId;
+							return !showAddButtonOnLastPage && <Connector />;
+						})()}
 						<Button
 							onPress={addToLastPage}
 							className="flex items-center gap-1.5 px-2.5 py-1 h-8 bg-white rounded-lg border-[0.5px] border-gray-200 shadow-sm hover:bg-gray-50 transition-colors cursor-pointer"
@@ -164,4 +171,11 @@ function AddButton({ onPress }: { onPress: () => void }) {
 	);
 }
 
+function Connector({ isAnimated = false }: { isAnimated?: boolean }) {
+	return (
+		<div
+			className={`w-5 h-[1.5px] border-t border-dashed border-gray-300 transition-all duration-1500 ${isAnimated ? "animate-in fade-in-0 slide-in-from-left-4" : ""}`}
+		/>
+	);
+}
 export default PageNavigation;

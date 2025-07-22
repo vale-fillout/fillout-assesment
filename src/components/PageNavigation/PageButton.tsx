@@ -15,6 +15,44 @@ import {
 import { SettingsMenu } from "../SettingsMenu";
 import { Page } from "./types";
 
+const dummyActions: MenuAction[][] = [
+	[
+		{
+			id: "set-first-page",
+			label: "Set as first page",
+			icon: <FlagIcon />,
+			onClick: () => console.log("Set as first page"),
+		},
+		{
+			id: "rename",
+			label: "Rename",
+			icon: <PencilIcon />,
+			onClick: () => console.log("Rename"),
+		},
+		{
+			id: "copy",
+			label: "Copy",
+			icon: <CopyIcon />,
+			onClick: () => console.log("Copy"),
+		},
+		{
+			id: "duplicate",
+			label: "Duplicate",
+			icon: <DuplicateIcon />,
+			onClick: () => console.log("Duplicate"),
+		},
+	],
+	[
+		{
+			id: "delete",
+			label: "Delete",
+			icon: <TrashIcon />,
+			variant: "danger",
+			onClick: () => console.log("Delete"),
+		},
+	],
+];
+
 /**
  * Button component for a page in the page navigation.
  */
@@ -42,44 +80,6 @@ export function PageButton({
 		},
 		ref,
 	);
-
-	const dummyActions: MenuAction[][] = [
-		[
-			{
-				id: "set-first-page",
-				label: "Set as first page",
-				icon: <FlagIcon />,
-				onClick: () => console.log("Set as first page"),
-			},
-			{
-				id: "rename",
-				label: "Rename",
-				icon: <PencilIcon />,
-				onClick: () => console.log("Rename"),
-			},
-			{
-				id: "copy",
-				label: "Copy",
-				icon: <CopyIcon />,
-				onClick: () => console.log("Copy"),
-			},
-			{
-				id: "duplicate",
-				label: "Duplicate",
-				icon: <DuplicateIcon />,
-				onClick: () => console.log("Duplicate"),
-			},
-		],
-		[
-			{
-				id: "delete",
-				label: "Delete",
-				icon: <TrashIcon />,
-				variant: "danger",
-				onClick: () => console.log("Delete"),
-			},
-		],
-	];
 
 	const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
 		// Call button's pointer down first

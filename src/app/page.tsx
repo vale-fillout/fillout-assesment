@@ -4,6 +4,9 @@ import { CheckIcon, DocumentIcon, InfoIcon } from "@/components/Icons";
 import { PageNavigation } from "@/components/PageNavigation";
 import React, { useState } from "react";
 
+/**
+ * Fillout page navigaiotn bottom nav
+ */
 export default function Home() {
 	const [activePageId, setActivePageId] = useState("info");
 	const [basePages, setBasePages] = useState([
