@@ -1,14 +1,6 @@
 "use client";
 
-import {
-	CopyIcon,
-	DuplicateIcon,
-	FlagIcon,
-	PencilIcon,
-	TrashIcon,
-} from "@/components/Icons";
-import { SettingsMenu } from "@/components/SettingsMenu";
-import { StepperNavigation } from "@/components/StepperNavigation";
+import { PageNavigation } from "@/components/PageNavigation";
 import React, { useState } from "react";
 
 // Icon assets from Figma
@@ -24,93 +16,54 @@ const icons = {
 };
 
 export default function Home() {
-	const [activeStepId, setActiveStepId] = useState("info");
-	const [baseSteps, setBaseSteps] = useState([
+	const [activePageId, setActivePageId] = useState("info");
+	const [basePages, setBasePages] = useState([
 		{ id: "info", label: "Info", icon: icons.info },
 		{ id: "details", label: "Details", icon: icons.document },
 		{ id: "other", label: "Other", icon: icons.document },
 		{ id: "ending", label: "Ending", icon: icons.check },
 	]);
 
-	const steps = baseSteps.map((step) => ({
-		...step,
+	const pages = basePages.map((page) => ({
+		...page,
 		status:
-			step.id === activeStepId ? ("active" as const) : ("inactive" as const),
+			page.id === activePageId ? ("active" as const) : ("inactive" as const),
 	}));
 
-	const handleStepChange = (stepId: string) => {
-		setActiveStepId(stepId);
+	const handlePageChange = (pageId: string) => {
+		setActivePageId(pageId);
 	};
 
-	const handleAddPage = (afterStepId?: string) => {
+	const handleAddPage = (afterPageId?: string) => {
 		const newPageId = `page-${Date.now()}`;
 		const newPage = {
 			id: newPageId,
 			label: "Untitled",
 			icon: icons.document,
 		};
-		
-		if (afterStepId) {
-			setBaseSteps((prev) => {
-				const index = prev.findIndex(step => step.id === afterStepId);
-				const newSteps = [...prev];
-				newSteps.splice(index + 1, 0, newPage);
-				return newSteps;
+
+		if (afterPageId) {
+			setBasePages((prev) => {
+				const index = prev.findIndex((page) => page.id === afterPageId);
+				const newPages = [...prev];
+				newPages.splice(index + 1, 0, newPage);
+				return newPages;
 			});
 		} else {
-			setBaseSteps((prev) => [...prev, newPage]);
+			setBasePages((prev) => [...prev, newPage]);
 		}
-		
-		setActiveStepId(newPageId);
-	};
 
-	const dummyActions: MenuAction[][] = [
-		[
-			{
-				id: "set-first-page",
-				label: "Set as first page",
-				icon: <FlagIcon />,
-				onClick: () => console.log("Set as first page"),
-			},
-			{
-				id: "rename",
-				label: "Rename",
-				icon: <PencilIcon />,
-				onClick: () => console.log("Rename"),
-			},
-			{
-				id: "copy",
-				label: "Copy",
-				icon: <CopyIcon />,
-				onClick: () => console.log("Copy"),
-			},
-			{
-				id: "duplicate",
-				label: "Duplicate",
-				icon: <DuplicateIcon />,
-				onClick: () => console.log("Duplicate"),
-			},
-		],
-		[
-			{
-				id: "delete",
-				label: "Delete",
-				icon: <TrashIcon />,
-				variant: "danger",
-				onClick: () => console.log("Delete"),
-			},
-		],
-	];
+		setActivePageId(newPageId);
+	};
 
 	return (
 		<div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
 			<footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-				<StepperNavigation
-					steps={steps}
-					onStepChange={handleStepChange}
+				<PageNavigation
+					pages={pages}
+					onPageChange={handlePageChange}
 					onAddPage={handleAddPage}
 				/>
-				<SettingsMenu actionGroups={dummyActions} />
 			</footer>
 		</div>
 	);
